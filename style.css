@@ -1,0 +1,18 @@
+body {
+  background-color: white;
+  color: black;
+}
+h1 {
+  text-align: center;
+}
+header {
+  background-color: #1e3a8a;
+  padding: 20px;
+}
+main {
+  padding: 30px;
+}
+section {
+  background-color: #f3f4f6;
+  padding: 20px;
+}
