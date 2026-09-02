@@ -7,18 +7,30 @@ let vehiculos = [
     marca: "Toyota",
     modelo: "Corolla",
     año: 2020,
+    propietarios: 2,
+    soat: "Vigente",
+    revisionTecnica: "Vigente",
+    papeletas: "Sin papeletas",
   },
   {
     placa: "XYZ789",
     marca: "Kia",
     modelo: "Rio",
     año: 2022,
+    propietarios: 1,
+    soat: "Vigente",
+    revisionTecnica: "Vigente",
+    papeletas: "2 papeletas pendientes",
   },
   {
     placa: "DEF456",
     marca: "Hyundai",
     modelo: "Accent",
     año: 2019,
+    propietarios: 3,
+    soat: "Vigente",
+    revisionTecnica: "Vigente",
+    papeletas: "Sin papeletas",
   },
 ];
 
@@ -56,6 +68,16 @@ boton.addEventListener("click", function () {
         "<p><strong>Año:</strong> " +
         encontrado.año +
         "</p>" +
+        "<p><strong>Propietarios:</strong> " +
+        encontrado.propietarios +
+        "</p>" +
+        "<p><strong>SOAT:</strong> " +
+        encontrado.soat +
+        "</p>" +
+        "<p><strong>revisionTecnica:</strong> " +
+        encontrado.revisionTecnica +
+        "<p><strong>papeletas:</strong> " +
+        encontrado.papeletas +
         "</div>";
     } else {
       document.getElementById("resultado").textContent =
