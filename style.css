@@ -29,3 +29,17 @@ button {
   border: none;
   cursor: pointer;
 }
+.ficha-vehiculo {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.ficha-vehiculo h2 {
+  margin-top: 0;
+}
+
+.ficha-vehiculo p {
+  margin: 8px 0;
+}

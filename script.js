@@ -42,6 +42,7 @@ boton.addEventListener("click", function () {
 
     if (encontrado) {
       document.getElementById("resultado").innerHTML =
+        "<div class='ficha-vehiculo'>" +
         "<h2>VEHÍCULO ENCONTRADO</h2>" +
         "<p><strong>Placa:</strong> " +
         encontrado.placa +
@@ -54,7 +55,8 @@ boton.addEventListener("click", function () {
         "</p>" +
         "<p><strong>Año:</strong> " +
         encontrado.año +
-        "</p>";
+        "</p>" +
+        "</div>";
     } else {
       document.getElementById("resultado").textContent =
         "No se encontró ningún vehículo con esa placa";
