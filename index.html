@@ -16,22 +16,23 @@
     <main>
         <section>
             <h2>Bienvenido</h2>
-            <p>Bienvenido a mi sistema de revisión vehicular.</p>
+            <p id="mensaje">Bienvenido a mi sistema de revisión vehicular.</p>
         </section>
         <section>
             <h2>Consulta vehicular</h2>
 
             <p>Ingrese la placa del vehículo para comenzar la revisíon</p>
 
-            <input type="text" placeholder="Ingrese la placa" maxlength="6">
-            <button>Buscar</button>
+            <input type="text" id="placa" placeholder="Ingrese la placa" maxlength="6">
+            <button id="consultar">Consultar</button>
+            <p id="resultado"></p>
         </section>
     </main>
     <footer>
         <p>© 2026 Sistema de Revisión de Vehículos</p>
 
     </footer>
-
+    <script src="script.js"></script>
 </body>
 
 </html>
