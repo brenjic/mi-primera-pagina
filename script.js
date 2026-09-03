@@ -29,7 +29,7 @@ let vehiculos = [
     año: 2019,
     propietarios: 3,
     soat: "Vigente",
-    revisionTecnica: "Vigente",
+    revisionTecnica: "Vencida",
     papeletas: "Sin papeletas",
   },
 ];
@@ -53,9 +53,35 @@ boton.addEventListener("click", function () {
     });
 
     if (encontrado) {
+      let colorSoat;
+      if (encontrado.soat === "Vigente") {
+        colorSoat = "green";
+      } else {
+        colorSoat = "red";
+      }
+      let colorrevision;
+      if (encontrado.revisionTecnica === "Vigente") {
+        colorrevision = "green";
+      } else {
+        colorrevision = "red";
+      }
+      let colorPapeletas;
+      if (encontrado.papeletas === "Sin papeletas") {
+        colorPapeletas = "green";
+      } else {
+        colorPapeletas = "red";
+      }
+
+      if (
+        encontrado.soat &&
+        encontrado.revisionTecnica &&
+        encontrado.papeletas
+      ) {
+      }
+
       document.getElementById("resultado").innerHTML =
         "<div class='ficha-vehiculo'>" +
-        "<h2>VEHÍCULO ENCONTRADO</h2>" +
+        "<h2>🚗 INFORMACIÓN DEL VEHÍCULO</h2>" +
         "<p><strong>Placa:</strong> " +
         encontrado.placa +
         "</p>" +
@@ -71,13 +97,25 @@ boton.addEventListener("click", function () {
         "<p><strong>Propietarios:</strong> " +
         encontrado.propietarios +
         "</p>" +
-        "<p><strong>SOAT:</strong> " +
+        "<hr>" +
+        "<h2>📄 DOCUMENTACIÓN</h2>" +
+        "<p><strong>SOAT:</strong> <span style='color:" +
+        colorSoat +
+        "'>" +
         encontrado.soat +
-        "</p>" +
-        "<p><strong>revisionTecnica:</strong> " +
+        "</span></p>" +
+        "<p><strong>Revisión Técnica:</strong> <span style='color:" +
+        colorrevision +
+        "'>" +
         encontrado.revisionTecnica +
-        "<p><strong>papeletas:</strong> " +
+        "</span></p>" +
+        "<hr>" +
+        "<h2>⚠️ MULTAS</h2>" +
+        "<p><strong>Papeletas:</strong> <span style='color:" +
+        colorPapeletas +
+        "'>" +
         encontrado.papeletas +
+        "</span></p>" +
         "</div>";
     } else {
       document.getElementById("resultado").textContent =
