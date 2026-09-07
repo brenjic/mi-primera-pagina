@@ -12,7 +12,6 @@
     <header>
         <h1>Sistema de Revisión de Vehículos</h1>
     </header>
-
     <main>
         <section>
             <h2>Bienvenido</h2>
@@ -20,17 +19,42 @@
         </section>
         <section>
             <h2>Consulta vehicular</h2>
-
             <p>Ingrese la placa del vehículo para comenzar la revisíon</p>
-
             <input type="text" id="placa" placeholder="Ingrese la placa" maxlength="6">
             <button id="consultar">Consultar</button>
             <p id="resultado"></p>
         </section>
+        <section>
+            <h2>Registrar vehículo</h2>
+            <input type="text" id="nuevaPlaca" placeholder="Placa">
+            <input type="text" id="nuevaMarca" placeholder="Marca">
+            <input type="text" id="nuevoModelo" placeholder="Modelo">
+            <input type="number" id="nuevoAño" placeholder="Año">
+            <button id="registrar">Registrar vehículo</button>
+            <p id="mensajeRegistro"></p>
+            <button id="eliminar">Eliminar vehículo</button>
+            <button id="editar">Editar vehículo</button>
+        </section>
     </main>
+    <div id="modalEditar">
+        <div>
+            <h2>Editar vehículo</h2>
+
+            <input type="text" id="editarPlaca" placeholder="Placa">
+
+            <input type="text" id="editarMarca" placeholder="Marca">
+
+            <input type="text" id="editarModelo" placeholder="Modelo">
+
+            <input type="number" id="editarAño" placeholder="Año">
+
+            <button id="guardarEdicion">Guardar cambios</button>
+            <button id="cerrarEdicion">Cerrar</button>
+            <p id="mensajeEdicion"></p>
+        </div>
+    </div>
     <footer>
         <p>© 2026 Sistema de Revisión de Vehículos</p>
-
     </footer>
     <script src="script.js"></script>
 </body>
