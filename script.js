@@ -1,3 +1,5 @@
+const API_URL = "https://revision-vehicular-e2gh.onrender.com";
+
 let placa = document.getElementById("placa");
 let boton = document.getElementById("consultar");
 let botonRegistrar = document.getElementById("registrar");
@@ -16,6 +18,7 @@ botonGuardarEdicion.addEventListener("click", async function () {
   let nuevaMarca = document.getElementById("editarMarca").value;
   let nuevoModelo = document.getElementById("editarModelo").value;
   let nuevoAño = document.getElementById("editarAño").value;
+
   if (nuevaMarca === "") {
     document.getElementById("mensajeEdicion").textContent =
       "⚠️ Falta ingresar la marca";
@@ -27,6 +30,7 @@ botonGuardarEdicion.addEventListener("click", async function () {
       "⚠️ Falta ingresar el modelo";
     return;
   }
+
   if (nuevoAño === "") {
     document.getElementById("mensajeEdicion").textContent =
       "⚠️ Falta ingresar el año";
@@ -41,28 +45,28 @@ botonGuardarEdicion.addEventListener("click", async function () {
 
   try {
     let placaOriginal = document.getElementById("editarPlaca").dataset.original;
+
     console.log("Placa original:", placaOriginal);
+
     console.log("Datos a enviar:", {
       placa: nuevaPlaca,
       marca: nuevaMarca,
       modelo: nuevoModelo,
       anio: nuevoAño,
     });
-    let respuesta = await fetch(
-      `http://localhost:3000/vehiculos/${placaOriginal}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          placa: nuevaPlaca,
-          marca: nuevaMarca,
-          modelo: nuevoModelo,
-          anio: nuevoAño,
-        }),
+
+    let respuesta = await fetch(`${API_URL}/vehiculos/${placaOriginal}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        placa: nuevaPlaca,
+        marca: nuevaMarca,
+        modelo: nuevoModelo,
+        anio: nuevoAño,
+      }),
+    });
 
     if (!respuesta.ok) {
       document.getElementById("mensajeEdicion").textContent =
@@ -95,9 +99,7 @@ botonEditar.addEventListener("click", async function () {
   }
 
   try {
-    let respuesta = await fetch(
-      `http://localhost:3000/vehiculos/${numeroPlaca}`,
-    );
+    let respuesta = await fetch(`${API_URL}/vehiculos/${numeroPlaca}`);
 
     if (!respuesta.ok) {
       document.getElementById("mensajeRegistro").textContent =
@@ -131,12 +133,9 @@ botonEliminar.addEventListener("click", async function () {
   }
 
   try {
-    let respuesta = await fetch(
-      `http://localhost:3000/vehiculos/${numeroPlaca}`,
-      {
-        method: "DELETE",
-      },
-    );
+    let respuesta = await fetch(`${API_URL}/vehiculos/${numeroPlaca}`, {
+      method: "DELETE",
+    });
 
     if (!respuesta.ok) {
       document.getElementById("mensajeRegistro").textContent =
@@ -167,6 +166,7 @@ botonRegistrar.addEventListener("click", async function () {
   let nuevoCombustible = document.getElementById("nuevoCombustible").value;
   let nuevaGarantia = document.getElementById("nuevaGarantia").value;
   let nuevaMedida = document.getElementById("nuevaMedida").value;
+
   let nuevaDeudaSat = "Sin deuda";
   let nuevoImpuestoVehicular = "Pagado";
   let nuevaDeudaSutran = "Sin deuda";
@@ -179,6 +179,7 @@ botonRegistrar.addEventListener("click", async function () {
   let nuevaDeudaAtu = "Sin deuda";
   let nuevosCambiosPlaca = "Sin cambios registrados";
   let nuevaConclusion = "Pendiente de evaluación";
+
   console.log({
     placa: nuevaPlaca,
     propietario: nuevoPropietario,
@@ -192,26 +193,31 @@ botonRegistrar.addEventListener("click", async function () {
       "⚠️ Falta ingresar la marca";
     return;
   }
+
   if (nuevoModelo === "") {
     document.getElementById("mensajeRegistro").textContent =
       "⚠️ Falta ingresar el modelo";
     return;
   }
+
   if (nuevoAño === "") {
     document.getElementById("mensajeRegistro").textContent =
       "⚠️ Falta ingresar el Año";
     return;
   }
+
   if (nuevoAño < 1900 || nuevoAño > 2026) {
     document.getElementById("mensajeRegistro").textContent =
       "⚠️ Ingrese un año válido";
     return;
   }
+
   if (nuevaPlaca === "") {
     document.getElementById("mensajeRegistro").textContent =
       "⚠️ Falta ingresar la Placa";
     return;
   }
+
   if (!/^[A-Za-z]{3}[0-9]{3}$/.test(nuevaPlaca)) {
     document.getElementById("mensajeRegistro").textContent =
       "⚠️ La placa debe tener 3 letras y 3 números";
@@ -231,7 +237,7 @@ botonRegistrar.addEventListener("click", async function () {
   }
 
   let respuestaExiste = await fetch(
-    `http://localhost:3000/vehiculos/existe/${nuevaPlaca.toUpperCase()}`,
+    `${API_URL}/vehiculos/existe/${nuevaPlaca.toUpperCase()}`,
   );
 
   let existe = await respuestaExiste.json();
@@ -241,6 +247,7 @@ botonRegistrar.addEventListener("click", async function () {
       "⚠️ Esta placa ya está registrada";
     return;
   }
+
   let nuevoVehiculo = {
     placa: nuevaPlaca.toUpperCase(),
     propietario: nuevoPropietario,
@@ -268,7 +275,8 @@ botonRegistrar.addEventListener("click", async function () {
     revisionTecnica: "Vigente",
     papeletas: "Sin papeletas",
   };
-  let respuesta = await fetch("http://localhost:3000/vehiculos", {
+
+  let respuesta = await fetch(`${API_URL}/vehiculos`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -284,6 +292,7 @@ botonRegistrar.addEventListener("click", async function () {
 
   document.getElementById("mensajeRegistro").textContent =
     "✅ Vehículo registrado correctamente";
+
   document.getElementById("nuevaPlaca").value = "";
   document.getElementById("nuevoPropietario").value = "";
   document.getElementById("nuevaMarca").value = "";
@@ -306,6 +315,7 @@ function verificarEstado(vehiculo) {
     return "🔴 Vehículo no apto para circular";
   }
 }
+
 function obtenerColor(estado) {
   if (estado === "Vigente" || estado === "Sin papeletas") {
     return "green";
@@ -313,6 +323,7 @@ function obtenerColor(estado) {
     return "red";
   }
 }
+
 function obtenerColorSunarp(estado) {
   if (estado === "Sin garantías" || estado === "Sin medidas") {
     return "green";
@@ -320,6 +331,7 @@ function obtenerColorSunarp(estado) {
     return "red";
   }
 }
+
 function obtenerColorSat(estado) {
   if (estado === "Sin deuda" || estado === "Pagado") {
     return "green";
@@ -327,6 +339,7 @@ function obtenerColorSat(estado) {
     return "red";
   }
 }
+
 function obtenerColorSutran(estado) {
   if (estado === "Sin deuda" || estado === "Sin infracciones") {
     return "green";
@@ -334,6 +347,7 @@ function obtenerColorSutran(estado) {
     return "red";
   }
 }
+
 function obtenerColorAtu(estado) {
   if (estado === "Sin deuda") {
     return "green";
@@ -341,6 +355,7 @@ function obtenerColorAtu(estado) {
     return "red";
   }
 }
+
 function obtenerColorOrdenCaptura(estado) {
   if (estado === "Sin orden de captura") {
     return "green";
@@ -348,6 +363,7 @@ function obtenerColorOrdenCaptura(estado) {
     return "red";
   }
 }
+
 function validarPlaca(numeroPlaca) {
   if (numeroPlaca === "") {
     return "Por favor, ingrese una placa";
@@ -373,6 +389,7 @@ function mostrarVehiculo(encontrado) {
   let colorImpuesto = obtenerColorSat(encontrado.impuesto_vehicular);
 
   let colorDeudaSutran = obtenerColorSutran(encontrado.deuda_sutran);
+
   let colorInfraccionesSutran = obtenerColorSutran(
     encontrado.infracciones_sutran,
   );
@@ -397,7 +414,6 @@ function mostrarVehiculo(encontrado) {
         </div>
       </div>
 
-
       <!-- CARACTERÍSTICAS -->
       <div class="caracteristicas-vehiculo tarjeta-ancha">
         <h3>🚘 CARACTERÍSTICAS</h3>
@@ -408,7 +424,6 @@ function mostrarVehiculo(encontrado) {
           <p><strong>Propietarios:</strong> ${encontrado.propietarios}</p>
         </div>
       </div>
-
 
       <!-- GRID DEL INFORME -->
       <div class="grid-informe">
@@ -432,7 +447,6 @@ function mostrarVehiculo(encontrado) {
           </p>
         </div>
 
-
         <!-- SAT -->
         <div class="caracteristicas-vehiculo">
           <h3>🏛️ SAT</h3>
@@ -451,7 +465,6 @@ function mostrarVehiculo(encontrado) {
             </span>
           </p>
         </div>
-
 
         <!-- SUTRAN -->
         <div class="caracteristicas-vehiculo">
@@ -472,7 +485,6 @@ function mostrarVehiculo(encontrado) {
           </p>
         </div>
 
-
         <!-- ATU -->
         <div class="caracteristicas-vehiculo">
           <h3>🚌 ATU</h3>
@@ -484,7 +496,6 @@ function mostrarVehiculo(encontrado) {
             </span>
           </p>
         </div>
-
 
         <!-- ANTECEDENTES -->
         <div class="caracteristicas-vehiculo">
@@ -505,7 +516,6 @@ function mostrarVehiculo(encontrado) {
             ${encontrado.cambios_placa}
           </p>
         </div>
-
 
         <!-- DOCUMENTACIÓN -->
         <div class="caracteristicas-vehiculo">
@@ -533,7 +543,6 @@ function mostrarVehiculo(encontrado) {
           </p>
         </div>
 
-
         <!-- SEGURO -->
         <div class="caracteristicas-vehiculo">
           <h3>🛡️ SEGURO VEHICULAR</h3>
@@ -543,7 +552,6 @@ function mostrarVehiculo(encontrado) {
             ${encontrado.seguro_vehicular}
           </p>
         </div>
-
 
         <!-- SEGURIDAD -->
         <div class="caracteristicas-vehiculo">
@@ -557,7 +565,6 @@ function mostrarVehiculo(encontrado) {
           </p>
         </div>
 
-
         <!-- RECOMENDACIÓN -->
         <div class="caracteristicas-vehiculo">
           <h3>🔧 RECOMENDACIÓN</h3>
@@ -570,7 +577,6 @@ function mostrarVehiculo(encontrado) {
 
       </div>
 
-
       <!-- CONCLUSIÓN -->
       <div class="caracteristicas-vehiculo tarjeta-conclusion">
         <h3>📋 CONCLUSIÓN</h3>
@@ -581,7 +587,6 @@ function mostrarVehiculo(encontrado) {
         </p>
       </div>
 
-
       <!-- ESTADO GENERAL -->
       <div class="estado-general">
         ${estado}
@@ -590,6 +595,7 @@ function mostrarVehiculo(encontrado) {
     </div>
   `;
 }
+
 boton.addEventListener("click", async function () {
   let numeroPlaca = placa.value.toUpperCase();
   let validacion = validarPlaca(numeroPlaca);
@@ -600,9 +606,7 @@ boton.addEventListener("click", async function () {
   }
 
   try {
-    let respuesta = await fetch(
-      `http://localhost:3000/vehiculos/${numeroPlaca}`,
-    );
+    let respuesta = await fetch(`${API_URL}/vehiculos/${numeroPlaca}`);
 
     if (!respuesta.ok) {
       document.getElementById("resultado").textContent =
@@ -619,7 +623,9 @@ boton.addEventListener("click", async function () {
       "Error al conectar con el servidor";
   }
 });
+
 function saludar() {
   console.log("Hola Benjamín");
 }
+
 saludar();
