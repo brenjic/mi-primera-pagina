@@ -1,63 +1,431 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background-color: white;
-  color: black;
+  background-color: #eef2f7;
+  color: #1f2937;
   font-family: Arial, sans-serif;
   margin: 0;
 }
-h1 {
-  text-align: center;
-}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
 header {
   background-color: #1e3a8a;
-  padding: 20px;
+  padding: 30px 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
+
+.encabezado {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.logo {
+  font-size: 48px;
+}
+
+header h1 {
+  color: white;
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+header p {
+  color: #dbeafe;
+  margin: 8px 0 0;
+  font-size: 15px;
+}
+
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
 main {
-  padding: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px;
 }
+
 section {
-  background-color: #f3f4f6;
-  padding: 20px;
+  background-color: white;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
 }
+
+/* =========================
+   TITULOS
+========================= */
+
+section h2 {
+  color: #1e3a8a;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.titulo-seccion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.titulo-seccion h2 {
+  margin: 0;
+}
+
+.titulo-seccion p {
+  margin: 5px 0 0;
+  color: #64748b;
+}
+
+.icono-titulo {
+  font-size: 30px;
+}
+
+/* =========================
+   CONSULTA
+========================= */
+
+.consulta-formulario {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.consulta-formulario input {
+  margin: 0;
+}
+
+.consulta-formulario button {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
 input {
   width: 100%;
-  padding: 10px;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  font-size: 15px;
+  background-color: white;
 }
+
+input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 2px;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
 button {
   background-color: #1e3a8a;
   color: white;
-  padding: 10px 20px;
+  padding: 11px 20px;
   border: none;
+  border-radius: 7px;
   cursor: pointer;
-}
-.ficha-vehiculo {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  font-size: 15px;
+  margin-top: 10px;
+  transition: 0.2s;
 }
 
-.ficha-vehiculo h2 {
+button:hover {
+  background-color: #162f70;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================
+   FORMULARIO REGISTRO
+========================= */
+
+.formulario-registro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 18px;
+}
+
+.campo input {
+  margin-bottom: 0;
+}
+
+.acciones-registro {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.acciones-registro button {
   margin-top: 0;
 }
 
-.ficha-vehiculo p {
-  margin: 8px 0;
+/* =========================
+   FICHA DEL VEHÍCULO
+========================= */
+
+.ficha-vehiculo {
+  margin-top: 25px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
 }
+
+.ficha-vehiculo > h2 {
+  margin-top: 0;
+  color: #1e3a8a;
+  border-bottom: 2px solid #1e3a8a;
+  padding-bottom: 10px;
+}
+
+.ficha-vehiculo > p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.ficha-vehiculo hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 28px 0;
+}
+/* =========================
+   INFORME EN DOS COLUMNAS
+========================= */
+
+.grid-informe {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.informacion-principal {
+  margin-bottom: 20px;
+}
+
+.informacion-principal h2 {
+  margin-bottom: 20px;
+}
+
+.datos-principales {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.datos-principales p {
+  margin: 0;
+  padding: 14px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.datos-principales p:first-child {
+  grid-column: 1 / -1;
+  background-color: #eff6ff;
+  border: 2px solid #1e3a8a;
+  text-align: center;
+  font-size: 24px;
+  color: #1e3a8a;
+}
+
+.datos-principales p {
+  margin: 6px 0;
+}
+
+.datos-tarjeta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.datos-tarjeta p {
+  margin: 5px 0;
+}
+
+.tarjeta-ancha {
+  width: 100%;
+}
+
+.tarjeta-conclusion {
+  margin-top: 20px;
+}
+/* =========================
+   TARJETAS INTERNAS
+========================= */
+
+.caracteristicas-vehiculo {
+  background-color: #f8fafc;
+  padding: 18px;
+  margin-top: 18px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.caracteristicas-vehiculo h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #1e3a8a;
+  font-size: 18px;
+  border-bottom: 1px solid #dbe3f0;
+  padding-bottom: 8px;
+}
+
+.caracteristicas-vehiculo p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+/* =========================
+   ESTADO GENERAL
+========================= */
+
+.estado-general {
+  margin-top: 15px;
+  padding: 18px;
+  border-radius: 10px;
+  background-color: #ecfdf5;
+  border: 1px solid #86efac;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* =========================
+   MODAL
+========================= */
+
 #modalEditar {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(15, 23, 42, 0.65);
+  z-index: 1000;
+  padding: 30px 20px;
 }
-#modalEditar > div {
+
+.modal-contenido {
   background-color: white;
-  width: 400px;
-  padding: 20px;
-  margin: 100px auto;
-  border-radius: 10px;
+  width: 100%;
+  max-width: 450px;
+  padding: 25px;
+  margin: 60px auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
-#modalEditar {
-  display: none;
+
+.modal-titulo h2 {
+  margin-bottom: 20px;
+}
+
+.acciones-modal {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.acciones-modal button {
+  flex: 1;
+}
+
+/* =========================
+   PIE DE PÁGINA
+========================= */
+
+footer {
+  background-color: #172554;
+  color: #dbeafe;
+  text-align: center;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+footer p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 750px) {
+  .encabezado {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  header h1 {
+    font-size: 24px;
+  }
+  .grid-informe {
+    grid-template-columns: 1fr;
+  }
+
+  .datos-principales {
+    grid-template-columns: 1fr;
+  }
+
+  .datos-tarjeta {
+    grid-template-columns: 1fr;
+  }
+  .consulta-formulario {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .consulta-formulario button {
+    width: 100%;
+  }
+
+  .formulario-registro {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones-registro {
+    flex-direction: column;
+  }
+
+  .acciones-registro button {
+    width: 100%;
+  }
+
+  .ficha-vehiculo {
+    padding: 20px;
+  }
 }

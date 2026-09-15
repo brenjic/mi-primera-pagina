@@ -6,85 +6,186 @@ let botonEditar = document.getElementById("editar");
 let modalEditar = document.getElementById("modalEditar");
 let botonGuardarEdicion = document.getElementById("guardarEdicion");
 let botonCerrarEdicion = document.getElementById("cerrarEdicion");
-let indiceEditar;
 
 botonCerrarEdicion.addEventListener("click", function () {
   modalEditar.style.display = "none";
 });
 
-botonGuardarEdicion.addEventListener("click", function () {
-  let nuevaPlaca = document.getElementById("editarPlaca").value;
+botonGuardarEdicion.addEventListener("click", async function () {
+  let nuevaPlaca = document.getElementById("editarPlaca").value.toUpperCase();
   let nuevaMarca = document.getElementById("editarMarca").value;
   let nuevoModelo = document.getElementById("editarModelo").value;
   let nuevoAño = document.getElementById("editarAño").value;
-
-  let placaDuplicada = vehiculos.some(function (vehiculo, indice) {
-    return (
-      vehiculo.placa === nuevaPlaca.toUpperCase() && indice !== indiceEditar
-    );
-  });
-
-  if (placaDuplicada) {
+  if (nuevaMarca === "") {
     document.getElementById("mensajeEdicion").textContent =
-      "⚠️ Esa placa ya está registrada";
+      "⚠️ Falta ingresar la marca";
     return;
   }
-  vehiculos[indiceEditar].año = nuevoAño;
-  vehiculos[indiceEditar].marca = nuevaMarca;
-  vehiculos[indiceEditar].modelo = nuevoModelo;
-  vehiculos[indiceEditar].placa = nuevaPlaca.toUpperCase();
-  localStorage.setItem("vehiculos", JSON.stringify(vehiculos));
-  document.getElementById("mensajeEdicion").textContent =
-    "✅ Cambios guardados correctamente";
+
+  if (nuevoModelo === "") {
+    document.getElementById("mensajeEdicion").textContent =
+      "⚠️ Falta ingresar el modelo";
+    return;
+  }
+  if (nuevoAño === "") {
+    document.getElementById("mensajeEdicion").textContent =
+      "⚠️ Falta ingresar el año";
+    return;
+  }
+
+  if (nuevoAño < 1900 || nuevoAño > 2026) {
+    document.getElementById("mensajeEdicion").textContent =
+      "⚠️ Ingrese un año válido";
+    return;
+  }
+
+  try {
+    let placaOriginal = document.getElementById("editarPlaca").dataset.original;
+    console.log("Placa original:", placaOriginal);
+    console.log("Datos a enviar:", {
+      placa: nuevaPlaca,
+      marca: nuevaMarca,
+      modelo: nuevoModelo,
+      anio: nuevoAño,
+    });
+    let respuesta = await fetch(
+      `http://localhost:3000/vehiculos/${placaOriginal}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          placa: nuevaPlaca,
+          marca: nuevaMarca,
+          modelo: nuevoModelo,
+          anio: nuevoAño,
+        }),
+      },
+    );
+
+    if (!respuesta.ok) {
+      document.getElementById("mensajeEdicion").textContent =
+        "⚠️ No se pudo editar el vehículo";
+      return;
+    }
+
+    let vehiculoActualizado = await respuesta.json();
+
+    document.getElementById("mensajeEdicion").textContent =
+      "✅ Cambios guardados correctamente";
+
+    modalEditar.style.display = "none";
+
+    console.log("Vehículo actualizado:", vehiculoActualizado);
+  } catch (error) {
+    console.error(error);
+    document.getElementById("mensajeEdicion").textContent =
+      "⚠️ Error al conectar con el servidor";
+  }
 });
 
-botonEditar.addEventListener("click", function () {
+botonEditar.addEventListener("click", async function () {
   let numeroPlaca = placa.value.toUpperCase();
 
-  indiceEditar = vehiculos.findIndex(function (vehiculo) {
-    return vehiculo.placa === numeroPlaca;
-  });
-
-  if (indiceEditar === -1) {
+  if (numeroPlaca === "") {
     document.getElementById("mensajeRegistro").textContent =
-      "⚠️ No se encontró un vehículo con esa placa";
+      "⚠️ Ingrese una placa";
     return;
   }
 
-  let vehiculo = vehiculos[indiceEditar];
-  document.getElementById("editarPlaca").value = vehiculo.placa;
-  document.getElementById("editarMarca").value = vehiculo.marca;
-  document.getElementById("editarModelo").value = vehiculo.modelo;
-  document.getElementById("editarAño").value = vehiculo.año;
+  try {
+    let respuesta = await fetch(
+      `http://localhost:3000/vehiculos/${numeroPlaca}`,
+    );
 
-  localStorage.setItem("vehiculos", JSON.stringify(vehiculos));
-  modalEditar.style.display = "block";
+    if (!respuesta.ok) {
+      document.getElementById("mensajeRegistro").textContent =
+        "⚠️ No se encontró ningún vehículo con esa placa";
+      return;
+    }
+
+    let vehiculo = await respuesta.json();
+
+    document.getElementById("editarPlaca").value = vehiculo.placa;
+    document.getElementById("editarPlaca").dataset.original = vehiculo.placa;
+    document.getElementById("editarMarca").value = vehiculo.marca;
+    document.getElementById("editarModelo").value = vehiculo.modelo;
+    document.getElementById("editarAño").value = vehiculo.anio;
+
+    modalEditar.style.display = "block";
+  } catch (error) {
+    console.error(error);
+    document.getElementById("mensajeRegistro").textContent =
+      "⚠️ Error al conectar con el servidor";
+  }
 });
 
-botonEliminar.addEventListener("click", function () {
+botonEliminar.addEventListener("click", async function () {
   let numeroPlaca = placa.value.toUpperCase();
 
-  let indice = vehiculos.findIndex(function (vehiculo) {
-    return vehiculo.placa === numeroPlaca;
-  });
+  if (numeroPlaca === "") {
+    document.getElementById("mensajeRegistro").textContent =
+      "⚠️ Ingrese una placa";
+    return;
+  }
 
-  if (indice !== -1) {
-    vehiculos.splice(indice, 1);
-    localStorage.setItem("vehiculos", JSON.stringify(vehiculos));
+  try {
+    let respuesta = await fetch(
+      `http://localhost:3000/vehiculos/${numeroPlaca}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if (!respuesta.ok) {
+      document.getElementById("mensajeRegistro").textContent =
+        "⚠️ No se encontró ningún vehículo con esa placa";
+      return;
+    }
+
+    let resultado = await respuesta.json();
 
     document.getElementById("mensajeRegistro").textContent =
       "✅ Vehículo eliminado correctamente";
-  } else {
+
+    console.log("Vehículo eliminado:", resultado);
+  } catch (error) {
+    console.error(error);
     document.getElementById("mensajeRegistro").textContent =
-      "⚠️ No se encontró un vehículo con esa placa";
+      "⚠️ Error al conectar con el servidor";
   }
 });
 
-botonRegistrar.addEventListener("click", function () {
+botonRegistrar.addEventListener("click", async function () {
   let nuevaPlaca = document.getElementById("nuevaPlaca").value;
+  let nuevoPropietario = document.getElementById("nuevoPropietario").value;
   let nuevaMarca = document.getElementById("nuevaMarca").value;
   let nuevoModelo = document.getElementById("nuevoModelo").value;
   let nuevoAño = document.getElementById("nuevoAño").value;
+  let nuevoUso = document.getElementById("nuevoUso").value;
+  let nuevoCombustible = document.getElementById("nuevoCombustible").value;
+  let nuevaGarantia = document.getElementById("nuevaGarantia").value;
+  let nuevaMedida = document.getElementById("nuevaMedida").value;
+  let nuevaDeudaSat = "Sin deuda";
+  let nuevoImpuestoVehicular = "Pagado";
+  let nuevaDeudaSutran = "Sin deuda";
+  let nuevasInfraccionesSutran = "Sin infracciones";
+  let nuevosAccidentes = "Sin accidentes registrados";
+  let nuevasLunasPolarizadas = "No";
+  let nuevoSeguroVehicular = "No registrado";
+  let nuevaRecomendacionMecanica = "Revisión recomendada";
+  let nuevaOrdenCaptura = "Sin orden de captura";
+  let nuevaDeudaAtu = "Sin deuda";
+  let nuevosCambiosPlaca = "Sin cambios registrados";
+  let nuevaConclusion = "Pendiente de evaluación";
+  console.log({
+    placa: nuevaPlaca,
+    propietario: nuevoPropietario,
+    marca: nuevaMarca,
+    modelo: nuevoModelo,
+    anio: nuevoAño,
+  });
 
   if (nuevaMarca === "") {
     document.getElementById("mensajeRegistro").textContent =
@@ -111,9 +212,15 @@ botonRegistrar.addEventListener("click", function () {
       "⚠️ Falta ingresar la Placa";
     return;
   }
+  if (!/^[A-Za-z]{3}[0-9]{3}$/.test(nuevaPlaca)) {
+    document.getElementById("mensajeRegistro").textContent =
+      "⚠️ La placa debe tener 3 letras y 3 números";
+    return;
+  }
 
   if (
     nuevaPlaca === "" ||
+    nuevoPropietario === "" ||
     nuevaMarca === "" ||
     nuevoModelo === "" ||
     nuevoAño === ""
@@ -123,86 +230,75 @@ botonRegistrar.addEventListener("click", function () {
     return;
   }
 
-  let placaExiste = vehiculos.some(function (vehiculo) {
-    return vehiculo.placa === nuevaPlaca.toUpperCase();
-  });
+  let respuestaExiste = await fetch(
+    `http://localhost:3000/vehiculos/existe/${nuevaPlaca.toUpperCase()}`,
+  );
 
-  if (placaExiste) {
+  let existe = await respuestaExiste.json();
+
+  if (existe) {
     document.getElementById("mensajeRegistro").textContent =
       "⚠️ Esta placa ya está registrada";
     return;
   }
-
   let nuevoVehiculo = {
     placa: nuevaPlaca.toUpperCase(),
+    propietario: nuevoPropietario,
     marca: nuevaMarca,
     modelo: nuevoModelo,
-    año: nuevoAño,
+    anio: nuevoAño,
+    uso: nuevoUso,
+    combustible: nuevoCombustible,
+    garantias: nuevaGarantia,
+    medidas: nuevaMedida,
+    deudaSat: nuevaDeudaSat,
+    impuestoVehicular: nuevoImpuestoVehicular,
+    deudaSutran: nuevaDeudaSutran,
+    infraccionesSutran: nuevasInfraccionesSutran,
+    accidentes: nuevosAccidentes,
+    lunasPolarizadas: nuevasLunasPolarizadas,
+    seguroVehicular: nuevoSeguroVehicular,
+    recomendacionMecanica: nuevaRecomendacionMecanica,
+    ordenCaptura: nuevaOrdenCaptura,
+    deudaAtu: nuevaDeudaAtu,
+    cambiosPlaca: nuevosCambiosPlaca,
+    conclusion: nuevaConclusion,
     propietarios: 1,
     soat: "Vigente",
     revisionTecnica: "Vigente",
     papeletas: "Sin papeletas",
   };
-  vehiculos.push(nuevoVehiculo);
-  localStorage.setItem("vehiculos", JSON.stringify(vehiculos));
+  let respuesta = await fetch("http://localhost:3000/vehiculos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(nuevoVehiculo),
+  });
+
+  if (!respuesta.ok) {
+    document.getElementById("mensajeRegistro").textContent =
+      "⚠️ Error al registrar el vehículo";
+    return;
+  }
+
   document.getElementById("mensajeRegistro").textContent =
     "✅ Vehículo registrado correctamente";
   document.getElementById("nuevaPlaca").value = "";
+  document.getElementById("nuevoPropietario").value = "";
   document.getElementById("nuevaMarca").value = "";
   document.getElementById("nuevoModelo").value = "";
   document.getElementById("nuevoAño").value = "";
+  document.getElementById("nuevoUso").value = "";
+  document.getElementById("nuevoCombustible").value = "";
+  document.getElementById("nuevaGarantia").value = "";
+  document.getElementById("nuevaMedida").value = "";
 });
 
-let vehiculos = [
-  {
-    placa: "ABC123",
-    marca: "Toyota",
-    modelo: "Corolla",
-    año: 2020,
-    propietarios: 2,
-    soat: "Vigente",
-    revisionTecnica: "Vigente",
-    papeletas: "Sin papeletas",
-  },
-  {
-    placa: "XYZ789",
-    marca: "Kia",
-    modelo: "Rio",
-    año: 2022,
-    propietarios: 1,
-    soat: "Vigente",
-    revisionTecnica: "Vigente",
-    papeletas: "2 papeletas pendientes",
-  },
-  {
-    placa: "DEF456",
-    marca: "Hyundai",
-    modelo: "Accent",
-    año: 2019,
-    propietarios: 3,
-    soat: "Vigente",
-    revisionTecnica: "Vencida",
-    papeletas: "Sin papeletas",
-  },
-];
-let vehiculoGuardado = localStorage.getItem("vehiculos");
-console.log(vehiculoGuardado);
-console.log(JSON.parse(vehiculoGuardado));
-if (vehiculoGuardado) {
-  vehiculos = JSON.parse(vehiculoGuardado);
-}
-
-function buscarVehiculo(numeroPlaca) {
-  let encontrado = vehiculos.find(function (vehiculo) {
-    return vehiculo.placa === numeroPlaca;
-  });
-
-  return encontrado;
-}
 function verificarEstado(vehiculo) {
   if (
     vehiculo.soat === "Vigente" &&
-    vehiculo.revisionTecnica === "Vigente" &&
+    vehiculo.revision_tecnica === "Vigente" &&
     vehiculo.papeletas === "Sin papeletas"
   ) {
     return "🟢 Vehículo apto para circular";
@@ -217,7 +313,41 @@ function obtenerColor(estado) {
     return "red";
   }
 }
-
+function obtenerColorSunarp(estado) {
+  if (estado === "Sin garantías" || estado === "Sin medidas") {
+    return "green";
+  } else {
+    return "red";
+  }
+}
+function obtenerColorSat(estado) {
+  if (estado === "Sin deuda" || estado === "Pagado") {
+    return "green";
+  } else {
+    return "red";
+  }
+}
+function obtenerColorSutran(estado) {
+  if (estado === "Sin deuda" || estado === "Sin infracciones") {
+    return "green";
+  } else {
+    return "red";
+  }
+}
+function obtenerColorAtu(estado) {
+  if (estado === "Sin deuda") {
+    return "green";
+  } else {
+    return "red";
+  }
+}
+function obtenerColorOrdenCaptura(estado) {
+  if (estado === "Sin orden de captura") {
+    return "green";
+  } else {
+    return "red";
+  }
+}
 function validarPlaca(numeroPlaca) {
   if (numeroPlaca === "") {
     return "Por favor, ingrese una placa";
@@ -232,62 +362,261 @@ function validarPlaca(numeroPlaca) {
 
 function mostrarVehiculo(encontrado) {
   let colorSoat = obtenerColor(encontrado.soat);
-  let colorrevision = obtenerColor(encontrado.revisionTecnica);
+  let colorrevision = obtenerColor(encontrado.revision_tecnica);
   let colorPapeletas = obtenerColor(encontrado.papeletas);
   let estado = verificarEstado(encontrado);
 
+  let colorGarantias = obtenerColorSunarp(encontrado.garantias);
+  let colorMedidas = obtenerColorSunarp(encontrado.medidas);
+
+  let colorDeudaSat = obtenerColorSat(encontrado.deuda_sat);
+  let colorImpuesto = obtenerColorSat(encontrado.impuesto_vehicular);
+
+  let colorDeudaSutran = obtenerColorSutran(encontrado.deuda_sutran);
+  let colorInfraccionesSutran = obtenerColorSutran(
+    encontrado.infracciones_sutran,
+  );
+
+  let colorDeudaAtu = obtenerColorAtu(encontrado.deuda_atu);
+
+  let colorOrdenCaptura = obtenerColorOrdenCaptura(encontrado.orden_captura);
+
   document.getElementById("resultado").innerHTML = `
-  <div class="ficha-vehiculo">
-    <h2>🚗 INFORMACIÓN DEL VEHÍCULO</h2>
+    <div class="ficha-vehiculo">
 
-    <p><strong>Placa:</strong> ${encontrado.placa}</p>
-    <p><strong>Marca:</strong> ${encontrado.marca}</p>
-    <p><strong>Modelo:</strong> ${encontrado.modelo}</p>
-    <p><strong>Año:</strong> ${encontrado.año}</p>
-    <p><strong>Propietarios:</strong> ${encontrado.propietarios}</p>
+      <!-- INFORMACIÓN PRINCIPAL -->
+      <div class="informacion-principal">
+        <h2>🚗 INFORMACIÓN DEL VEHÍCULO</h2>
 
-    <hr>
+        <div class="datos-principales">
+          <p><strong>Placa:</strong> ${encontrado.placa}</p>
+          <p><strong>Marca:</strong> ${encontrado.marca}</p>
+          <p><strong>Modelo:</strong> ${encontrado.modelo}</p>
+          <p><strong>Propietario:</strong> ${encontrado.propietario}</p>
+          <p><strong>Año:</strong> ${encontrado.anio}</p>
+        </div>
+      </div>
 
-    <h2>📄 DOCUMENTACIÓN</h2>
 
-    <p><strong>SOAT:</strong>
-      <span style="color:${colorSoat}">${encontrado.soat}</span>
-    </p>
+      <!-- CARACTERÍSTICAS -->
+      <div class="caracteristicas-vehiculo tarjeta-ancha">
+        <h3>🚘 CARACTERÍSTICAS</h3>
 
-    <p><strong>Revisión Técnica:</strong>
-      <span style="color:${colorrevision}">${encontrado.revisionTecnica}</span>
-    </p>
+        <div class="datos-tarjeta">
+          <p><strong>Uso:</strong> ${encontrado.uso}</p>
+          <p><strong>Combustible:</strong> ${encontrado.combustible}</p>
+          <p><strong>Propietarios:</strong> ${encontrado.propietarios}</p>
+        </div>
+      </div>
 
-    <hr>
 
-    <h2>⚠️ MULTAS</h2>
+      <!-- GRID DEL INFORME -->
+      <div class="grid-informe">
 
-    <p><strong>Papeletas:</strong>
-      <span style="color:${colorPapeletas}">${encontrado.papeletas}</span>
-    </p>
+        <!-- SUNARP -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🏛️ SUNARP</h3>
 
-    <hr>
+          <p>
+            <strong>Garantías:</strong>
+            <span style="color:${colorGarantias}">
+              ${encontrado.garantias}
+            </span>
+          </p>
 
-    <h2>📋 ESTADO GENERAL</h2>
+          <p>
+            <strong>Medidas / Embargos:</strong>
+            <span style="color:${colorMedidas}">
+              ${encontrado.medidas}
+            </span>
+          </p>
+        </div>
 
-    <p><strong>Estado:</strong> ${estado}</p>
-  </div>
-`;
+
+        <!-- SAT -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🏛️ SAT</h3>
+
+          <p>
+            <strong>Deuda SAT:</strong>
+            <span style="color:${colorDeudaSat}">
+              ${encontrado.deuda_sat}
+            </span>
+          </p>
+
+          <p>
+            <strong>Impuesto vehicular:</strong>
+            <span style="color:${colorImpuesto}">
+              ${encontrado.impuesto_vehicular}
+            </span>
+          </p>
+        </div>
+
+
+        <!-- SUTRAN -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🚨 SUTRAN</h3>
+
+          <p>
+            <strong>Deuda:</strong>
+            <span style="color:${colorDeudaSutran}">
+              ${encontrado.deuda_sutran}
+            </span>
+          </p>
+
+          <p>
+            <strong>Infracciones:</strong>
+            <span style="color:${colorInfraccionesSutran}">
+              ${encontrado.infracciones_sutran}
+            </span>
+          </p>
+        </div>
+
+
+        <!-- ATU -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🚌 ATU</h3>
+
+          <p>
+            <strong>Deuda:</strong>
+            <span style="color:${colorDeudaAtu}">
+              ${encontrado.deuda_atu}
+            </span>
+          </p>
+        </div>
+
+
+        <!-- ANTECEDENTES -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🚗 ANTECEDENTES</h3>
+
+          <p>
+            <strong>Accidentes / Siniestros:</strong>
+            ${encontrado.accidentes}
+          </p>
+
+          <p>
+            <strong>Lunas polarizadas:</strong>
+            ${encontrado.lunas_polarizadas}
+          </p>
+
+          <p>
+            <strong>Cambios de placa:</strong>
+            ${encontrado.cambios_placa}
+          </p>
+        </div>
+
+
+        <!-- DOCUMENTACIÓN -->
+        <div class="caracteristicas-vehiculo">
+          <h3>📄 DOCUMENTACIÓN</h3>
+
+          <p>
+            <strong>SOAT:</strong>
+            <span style="color:${colorSoat}">
+              ${encontrado.soat}
+            </span>
+          </p>
+
+          <p>
+            <strong>Revisión Técnica:</strong>
+            <span style="color:${colorrevision}">
+              ${encontrado.revision_tecnica}
+            </span>
+          </p>
+
+          <p>
+            <strong>Papeletas:</strong>
+            <span style="color:${colorPapeletas}">
+              ${encontrado.papeletas}
+            </span>
+          </p>
+        </div>
+
+
+        <!-- SEGURO -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🛡️ SEGURO VEHICULAR</h3>
+
+          <p>
+            <strong>Seguro:</strong>
+            ${encontrado.seguro_vehicular}
+          </p>
+        </div>
+
+
+        <!-- SEGURIDAD -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🚨 SEGURIDAD</h3>
+
+          <p>
+            <strong>Orden de captura:</strong>
+            <span style="color:${colorOrdenCaptura}">
+              ${encontrado.orden_captura}
+            </span>
+          </p>
+        </div>
+
+
+        <!-- RECOMENDACIÓN -->
+        <div class="caracteristicas-vehiculo">
+          <h3>🔧 RECOMENDACIÓN</h3>
+
+          <p>
+            <strong>Revisión mecánica:</strong>
+            ${encontrado.recomendacion_mecanica}
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- CONCLUSIÓN -->
+      <div class="caracteristicas-vehiculo tarjeta-conclusion">
+        <h3>📋 CONCLUSIÓN</h3>
+
+        <p>
+          <strong>Resultado:</strong>
+          ${encontrado.conclusion}
+        </p>
+      </div>
+
+
+      <!-- ESTADO GENERAL -->
+      <div class="estado-general">
+        ${estado}
+      </div>
+
+    </div>
+  `;
 }
-boton.addEventListener("click", function () {
+boton.addEventListener("click", async function () {
   let numeroPlaca = placa.value.toUpperCase();
   let validacion = validarPlaca(numeroPlaca);
 
   if (validacion !== "ok") {
     document.getElementById("resultado").textContent = validacion;
-  } else {
-    let encontrado = buscarVehiculo(numeroPlaca);
-    if (encontrado) {
-      mostrarVehiculo(encontrado);
-    } else {
+    return;
+  }
+
+  try {
+    let respuesta = await fetch(
+      `http://localhost:3000/vehiculos/${numeroPlaca}`,
+    );
+
+    if (!respuesta.ok) {
       document.getElementById("resultado").textContent =
         "No se encontró ningún vehículo con esa placa";
+      return;
     }
+
+    let encontrado = await respuesta.json();
+
+    mostrarVehiculo(encontrado);
+  } catch (error) {
+    console.error(error);
+    document.getElementById("resultado").textContent =
+      "Error al conectar con el servidor";
   }
 });
 function saludar() {

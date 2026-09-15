@@ -9,54 +9,193 @@
 </head>
 
 <body>
+
     <header>
-        <h1>Sistema de Revisión de Vehículos</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Bienvenido</h2>
-            <p id="mensaje">Bienvenido a mi sistema de revisión vehicular.</p>
-        </section>
-        <section>
-            <h2>Consulta vehicular</h2>
-            <p>Ingrese la placa del vehículo para comenzar la revisíon</p>
-            <input type="text" id="placa" placeholder="Ingrese la placa" maxlength="6">
-            <button id="consultar">Consultar</button>
-            <p id="resultado"></p>
-        </section>
-        <section>
-            <h2>Registrar vehículo</h2>
-            <input type="text" id="nuevaPlaca" placeholder="Placa">
-            <input type="text" id="nuevaMarca" placeholder="Marca">
-            <input type="text" id="nuevoModelo" placeholder="Modelo">
-            <input type="number" id="nuevoAño" placeholder="Año">
-            <button id="registrar">Registrar vehículo</button>
-            <p id="mensajeRegistro"></p>
-            <button id="eliminar">Eliminar vehículo</button>
-            <button id="editar">Editar vehículo</button>
-        </section>
-    </main>
-    <div id="modalEditar">
-        <div>
-            <h2>Editar vehículo</h2>
+        <div class="encabezado">
+            <div class="logo">
+                🚗
+            </div>
 
-            <input type="text" id="editarPlaca" placeholder="Placa">
-
-            <input type="text" id="editarMarca" placeholder="Marca">
-
-            <input type="text" id="editarModelo" placeholder="Modelo">
-
-            <input type="number" id="editarAño" placeholder="Año">
-
-            <button id="guardarEdicion">Guardar cambios</button>
-            <button id="cerrarEdicion">Cerrar</button>
-            <p id="mensajeEdicion"></p>
+            <div>
+                <h1>Sistema de Revisión de Vehículos</h1>
+                <p>Consulta y verificación de antecedentes vehiculares</p>
+            </div>
         </div>
+    </header>
+
+    <main>
+
+        <!-- BIENVENIDA -->
+        <section class="seccion-bienvenida">
+            <h2>Bienvenido</h2>
+
+            <p id="mensaje">
+                Bienvenido a mi sistema de revisión vehicular.
+            </p>
+        </section>
+
+
+        <!-- CONSULTA -->
+        <section class="seccion-consulta">
+
+            <div class="titulo-seccion">
+                <span class="icono-titulo">🔎</span>
+
+                <div>
+                    <h2>Consulta vehicular</h2>
+                    <p>Ingrese la placa del vehículo para consultar su información.</p>
+                </div>
+            </div>
+
+            <div class="consulta-formulario">
+
+                <input type="text" id="placa" placeholder="Ejemplo: ABC123" maxlength="6">
+
+                <button id="consultar">
+                    Consultar vehículo
+                </button>
+
+            </div>
+
+            <p id="resultado"></p>
+
+        </section>
+
+
+        <!-- REGISTRO -->
+        <section class="seccion-registro">
+
+            <div class="titulo-seccion">
+                <span class="icono-titulo">🚘</span>
+
+                <div>
+                    <h2>Registrar vehículo</h2>
+                    <p>Ingrese los datos básicos del vehículo.</p>
+                </div>
+            </div>
+
+
+            <div class="formulario-registro">
+
+                <div class="campo">
+                    <label for="nuevaPlaca">Placa</label>
+                    <input type="text" id="nuevaPlaca" placeholder="ABC123" maxlength="6">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevoPropietario">Propietario</label>
+                    <input type="text" id="nuevoPropietario" placeholder="Nombre del propietario">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevaMarca">Marca</label>
+                    <input type="text" id="nuevaMarca" placeholder="Toyota">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevoModelo">Modelo</label>
+                    <input type="text" id="nuevoModelo" placeholder="Corolla">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevoAño">Año</label>
+                    <input type="number" id="nuevoAño" placeholder="2024">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevoUso">Uso</label>
+                    <input type="text" id="nuevoUso" placeholder="Particular">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevoCombustible">Combustible</label>
+                    <input type="text" id="nuevoCombustible" placeholder="Gasolina">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevaGarantia">Garantías</label>
+                    <input type="text" id="nuevaGarantia" placeholder="Sin garantías">
+                </div>
+
+                <div class="campo">
+                    <label for="nuevaMedida">Medidas / Embargos</label>
+                    <input type="text" id="nuevaMedida" placeholder="Sin medidas">
+                </div>
+
+            </div>
+
+
+            <div class="acciones-registro">
+
+                <button id="registrar">
+                    Registrar vehículo
+                </button>
+
+                <button id="eliminar">
+                    Eliminar vehículo
+                </button>
+
+                <button id="editar">
+                    Editar vehículo
+                </button>
+
+            </div>
+
+            <p id="mensajeRegistro"></p>
+
+        </section>
+
+    </main>
+
+
+    <!-- MODAL PARA EDITAR -->
+    <div id="modalEditar">
+
+        <div class="modal-contenido">
+
+            <div class="modal-titulo">
+                <h2>✏️ Editar vehículo</h2>
+            </div>
+
+            <label for="editarPlaca">Placa</label>
+            <input type="text" id="editarPlaca" placeholder="ABC123">
+
+            <label for="editarMarca">Marca</label>
+            <input type="text" id="editarMarca" placeholder="Toyota">
+
+            <label for="editarModelo">Modelo</label>
+            <input type="text" id="editarModelo" placeholder="Corolla">
+
+            <label for="editarAño">Año</label>
+            <input type="number" id="editarAño" placeholder="2024">
+
+            <div class="acciones-modal">
+
+                <button id="guardarEdicion">
+                    Guardar cambios
+                </button>
+
+                <button id="cerrarEdicion">
+                    Cerrar
+                </button>
+
+            </div>
+
+            <p id="mensajeEdicion"></p>
+
+        </div>
+
     </div>
+
+
     <footer>
         <p>© 2026 Sistema de Revisión de Vehículos</p>
+        <p>Sistema de consulta y revisión vehicular</p>
     </footer>
+
+
     <script src="script.js"></script>
+
 </body>
 
 </html>
