@@ -383,8 +383,6 @@ function mostrarVehiculo(encontrado) {
   let estado = verificarEstado(encontrado);
 
   let colorGarantias = obtenerColorSunarp(encontrado.garantias);
-  console.log("Garantía recibida:", encontrado.garantias);
-
   let colorMedidas = obtenerColorSunarp(encontrado.medidas);
 
   let colorDeudaSat = obtenerColorSat(encontrado.deuda_sat);
